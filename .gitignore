@@ -2,8 +2,10 @@
 /models/
 /output/
 /data/
-.idea
 
+# IntelliJ IDEA
+.idea/
+*.iml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
