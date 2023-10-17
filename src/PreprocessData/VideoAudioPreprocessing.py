@@ -15,8 +15,8 @@ class VideoAudioLengthNotEqual(Exception):
 
 # Run the ffmpeg to remove background noise
 def remove_noise(input_filename, input_path, output_path):
-    command = ["ffmpeg", "-loglevel error -hide_banner -nostats", "-i", "{}/{}".format(input_path, input_filename),
-               "-af",  "'afftdn=nf=-25,afftdn=nf=-25,highpass=f=200, lowpass=f=3000'",
+    command = ["ffmpeg", "-hide_banner -nostats", "-i", "{}/{}".format(input_path, input_filename),
+               "-af",  "'afftdn=nf=-25,afftdn=nf=-25,highpass=f=200,lowpass=f=3000'",
               "{}/{}".format(output_path, input_filename)]
     subprocess.run(" ".join(command), shell=True)
 
@@ -26,7 +26,7 @@ def remove_noise(input_filename, input_path, output_path):
 def output_silence_timestamps(input_filename, input_path, output_path, threshold=-60, duration=1):
     filename = input_filename.split(".")[0]
     # -vn: only keeps audio stream
-    command = ["ffmpeg", "-vn", "-hide_banner",
+    command = ["ffmpeg", "-vn", "-hide_banner -nostats",
                                "-i", "{}/{}".format(input_path, input_filename),
                                "-af", "'silencedetect=n={}dB:d={}'".format(threshold, duration),
                                "-f null - 2>&1 | grep 'silence_end' | awk '{{print $5 $7 $8}}' > {}/{}.txt".format(output_path, filename)]
