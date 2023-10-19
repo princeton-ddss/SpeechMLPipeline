@@ -5,10 +5,6 @@ python xx.py
 
 #!/usr/bin/env python
 # coding: utf-8
-
-import subprocess
-from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips, concatenate_audioclips
-
 import os
 from joblib import Parallel, delayed
 from VideoAudioPreprocessing import remove_noise, output_silence_timestamps, cut_video_and_audio_based_on_silence
