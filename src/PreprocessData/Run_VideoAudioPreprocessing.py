@@ -11,7 +11,8 @@ from VideoAudioPreprocessing import remove_noise, output_silence_timestamps, cut
 
 def preprocess_video_audio(input_filename, input_path,
                             output_videoprocessed_path, output_silencets_path,
-                            output_cut_path, video_filetype = 'mp4', audio_filetype = 'wav',
+                            output_cut_path, temp_audio_path,
+                            video_filetype = 'mp4', audio_filetype = 'wav',
                             threshold = -60, duration = 1):
 
         if not input_filename.endswith(video_filetype):
@@ -34,7 +35,7 @@ def preprocess_video_audio(input_filename, input_path,
         cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, audio_filetype,
                                              input_silence_filename,
                                              input_video_path, input_silencets_path,
-                                             output_cut_path)
+                                             output_cut_path, temp_audio_path)
 def main():
     input_path = "/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/input"
     os.chdir(input_path)
@@ -42,10 +43,12 @@ def main():
     output_videoprocessed_path = "/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/output_processed"
     output_silencets_path = "/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/silence_timestamps"
     output_cut_path = '/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/output_cut'
+    temp_audio_path = '/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/temp'
 
     Parallel(n_jobs=-1)(delayed(preprocess_video_audio)(input_filename, input_path,
                                     output_videoprocessed_path, output_silencets_path,
-                                    output_cut_path, video_filetype = 'mp4', audio_filetype = 'wav',
+                                    output_cut_path, temp_audio_path,
+                                    video_filetype = 'mp4', audio_filetype = 'wav',
                                     threshold = -60, duration = 1) for input_filename in os.listdir(input_path)
                                     if input_filename.endswith('.mp4'))
 

@@ -35,7 +35,8 @@ def output_silence_timestamps(input_filename, input_path, output_path, threshold
 
 # Cut video and audio based on silence timestamps
 def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, audio_filetype,
-                                         input_silence_filename, input_video_path, input_silencets_path, output_path):
+                                         input_silence_filename, input_video_path, input_silencets_path, output_path,
+                                         temp_audio_path):
     # Ease in duration between cuts
     ease = 0.0
     minimum_duration = 1.0
@@ -101,7 +102,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
         output_video_file,
         codec='libx264',
         audio_codec='aac',
-        temp_audiofile='temp-audio.m4a',
+        temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
         remove_temp=True
     )
 
