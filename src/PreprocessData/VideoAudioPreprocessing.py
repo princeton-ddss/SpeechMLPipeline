@@ -4,7 +4,8 @@ Functions to Preprocess Video/Audio for ML Models Inputs
 
 #!/usr/bin/env python
 # coding: utf-8
-
+import os
+import shutil
 import subprocess
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips, concatenate_audioclips
 
@@ -50,6 +51,14 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     output_audio_file = "{}/audio/{}.{}".format(output_path, input_filename_noft, audio_filetype)
     output_video_file = "{}/video/{}.{}".format(output_path, input_filename_noft, video_filetype)
 
+    silence_file = "{}/{}.{}".format(input_silencets_path, input_silence_filename)
+    if os.path.getsize(silence_file) == 0:
+        print("No Silence TimeStamp")
+        shutil.copyfile(input_file, output_video_file)
+        audio = AudioFileClip(input_file)
+        audio.write_audiofile(output_audio_file)
+        return
+    
     in_handle = open('{}/{}'.format(input_silencets_path, input_silence_filename), "r", errors='replace')
     video = VideoFileClip(input_file)
     audio = AudioFileClip(input_file)
@@ -98,13 +107,27 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     processed_audio = concatenate_audioclips(audios)
     processed_video.audio = processed_audio
 
-    processed_video.write_videofile(
-        output_video_file,
-        codec='libx264',
-        audio_codec='aac',
-        temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
-        remove_temp=True
-    )
+    try:
+        processed_video.write_videofile(
+            output_video_file,
+            codec='libx264',
+            audio_codec='aac',
+            temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
+            remove_temp=True
+        )
+    except IndexError:
+        # Short by one frame, so get rid on the last frame:
+        processed_video = processed_video.subclip(t_end=(processed_video.duration - 1.0 / (2* processed_video.fps)))
+        processed_video.write_videofile(
+            output_video_file,
+            codec='libx264',
+            audio_codec='aac',
+            temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
+            remove_temp=True
+        )
+
+        # Get the new audio after the cutting to solve folating issue
+        processed_audio = processed_video.audio
 
     processed_audio.write_audiofile(
         output_audio_file
