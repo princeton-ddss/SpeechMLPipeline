@@ -74,6 +74,9 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
         if not line:
             break
 
+        if not 'silence_duration' in line:
+            continue
+
         end, duration = line.strip().split('silence_duration:')
 
         to = float(end) - float(duration)
@@ -126,7 +129,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
             remove_temp=True
         )
 
-        # Get the new audio after the cutting to solve folating issue
+        # Get the new audio after the cutting to solve floating issue
         processed_audio = processed_video.audio
 
     processed_audio.write_audiofile(
