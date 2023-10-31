@@ -60,8 +60,10 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
         return
     
     in_handle = open('{}/{}'.format(input_silencets_path, input_silence_filename), "r", errors='replace')
-    video = VideoFileClip(input_file)
-    audio = AudioFileClip(input_file)
+
+    # Set buffersize higher above 400,000 to avoid index error during output
+    video = VideoFileClip(input_file, audio_buffersize=400000)
+    audio = AudioFileClip(input_file, buffersize=400000)
     if video.duration != audio.duration:
         raise VideoAudioLengthNotEqual
     full_duration = video.duration
@@ -110,27 +112,19 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     processed_audio = concatenate_audioclips(audios)
     processed_video.audio = processed_audio
 
-    try:
-        processed_video.write_videofile(
-            output_video_file,
-            codec='libx264',
-            audio_codec='aac',
-            temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
-            remove_temp=True
-        )
-    except IndexError:
-        # Short by one frame, so get rid on the last frame:
-        processed_video = processed_video.subclip(t_end=(processed_video.duration - 1.0 / (2* processed_video.fps)))
-        processed_video.write_videofile(
-            output_video_file,
-            codec='libx264',
-            audio_codec='aac',
-            temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
-            remove_temp=True
-        )
 
-        # Get the new audio after the cutting to solve floating issue
-        processed_audio = processed_video.audio
+    # Short by one frame, so get rid on the last frame to avoid the index error
+    processed_video = processed_video.subclip(t_end=(processed_video.duration - 1.0 / (2* processed_video.fps)))
+    processed_video.write_videofile(
+        output_video_file,
+        codec='libx264',
+        audio_codec='aac',
+        temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
+        remove_temp=True
+    )
+
+    # Get the new audio after the cutting to solve floating issue
+    processed_audio = processed_video.audio.set_fps(processed_video.fps)
 
     processed_audio.write_audiofile(
         output_audio_file
