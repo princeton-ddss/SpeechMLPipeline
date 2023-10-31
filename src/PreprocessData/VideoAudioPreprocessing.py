@@ -124,7 +124,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     )
 
     # Get the new audio after the cutting to solve floating issue
-    processed_audio = processed_video.audio.set_fps(processed_video.fps)
+    processed_audio = processed_video.audio
 
     processed_audio.write_audiofile(
         output_audio_file
