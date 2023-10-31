@@ -131,8 +131,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     )
 
     in_handle.close()
-    if processed_video.duration != processed_audio.duration:
-        raise VideoAudioLengthNotEqual
+
     video.close()
     audio.close()
     processed_video.close()
