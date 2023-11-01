@@ -61,6 +61,13 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     output_video_file = "{}/video/{}.{}".format(output_path, input_filename_noft, video_filetype)
 
     silence_file = "{}/{}.{}".format(input_silencets_path, input_silence_filename)
+    if os.path.getsize(silence_file) == 0:
+        print("No Silence TimeStamp")
+        shutil.copyfile(input_file, output_video_file)
+        audio = AudioFileClip(input_file)
+        audio.write_audiofile(output_audio_file)
+        return
+
 
     in_handle = open('{}/{}'.format(input_silencets_path, input_silence_filename), "r", errors='replace')
 
