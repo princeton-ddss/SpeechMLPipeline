@@ -53,7 +53,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     output_audio_file = "{}/audio/{}.{}".format(output_path, input_filename_noft, audio_filetype)
     output_video_file = "{}/video/{}.{}".format(output_path, input_filename_noft, video_filetype)
 
-    silence_file = "{}/{}.{}".format(input_silencets_path, input_silence_filename)
+    silence_file = "{}/{}".format(input_silencets_path, input_silence_filename)
 
 
     if os.path.getsize(silence_file) == 0:
