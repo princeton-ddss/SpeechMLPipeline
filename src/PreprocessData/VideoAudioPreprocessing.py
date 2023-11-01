@@ -20,14 +20,7 @@ def remove_noise(input_filename, input_path, output_path):
                "-af",  "'afftdn=nf=-25,afftdn=nf=-25,highpass=f=200,lowpass=f=3000'",
               "{}/{}".format(output_path, input_filename)]
     subprocess.run(" ".join(command), shell=True)
-    #  Check and Remove invalid processed file to ensure the consistency of files across folders
-    os.chdir(output_path)
-    try:
-        video = VideoFileClip(input_filename, audio_buffersize=400000)
-        duration = video.duration
-    except:
-        print('error')
-        os.remove(input_filename)
+
 
 
 # Run the ffmpeg to find silence parts of audio and video
