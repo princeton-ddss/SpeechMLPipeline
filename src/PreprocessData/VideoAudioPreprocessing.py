@@ -38,7 +38,7 @@ def output_silence_timestamps(input_filename, input_path, output_path, threshold
 
 # Cut video and audio based on silence timestamps
 def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, audio_filetype,
-                                         input_silence_filename, input_video_path, input_silencets_path, output_path,
+                                         input_silence_filename, input_processed_video_path, input_original_video_path, input_silencets_path, output_path,
                                          temp_audio_path):
     # Ease in duration between cuts
     ease = 0.0
@@ -49,15 +49,18 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     # start of next clip
     last = 0
 
-    input_file = "{}/{}.{}".format(input_video_path, input_filename_noft, video_filetype)
+    input_file = "{}/{}.{}".format(input_processed_video_path, input_filename_noft, video_filetype)
     output_audio_file = "{}/audio/{}.{}".format(output_path, input_filename_noft, audio_filetype)
     output_video_file = "{}/video/{}.{}".format(output_path, input_filename_noft, video_filetype)
 
     silence_file = "{}/{}.{}".format(input_silencets_path, input_silence_filename)
+
+
     if os.path.getsize(silence_file) == 0:
-        print("No Silence TimeStamp")
-        shutil.copyfile(input_file, output_video_file)
-        audio = AudioFileClip(input_file)
+        print("No Silence TimeStamp; The processed file may be corrupted")
+        input_original_file = "{}/{}.{}".format(input_original_video_path, input_filename_noft, video_filetype)
+        shutil.copyfile(input_original_file, output_video_file)
+        audio = AudioFileClip(input_original_file)
         audio.write_audiofile(output_audio_file)
         return
 

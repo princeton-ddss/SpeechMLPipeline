@@ -29,12 +29,12 @@ def preprocess_video_audio(input_filename, input_path,
         input_filename_noft = input_filename.split(".")[0]
         input_silence_filename = "{}.txt".format(input_filename_noft)
 
-        input_video_path = output_videoprocessed_path
+        input_processed_video_path = output_videoprocessed_path
         input_silencets_path = output_silencets_path
 
         cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, audio_filetype,
                                              input_silence_filename,
-                                             input_video_path, input_silencets_path,
+                                             input_processed_video_path, input_path, input_silencets_path,
                                              output_cut_path, temp_audio_path)
 def main():
     input_path = "/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/input"
