@@ -6,8 +6,10 @@ python xx.py
 #!/usr/bin/env python
 # coding: utf-8
 import os
+import shutil
 from joblib import Parallel, delayed
 from VideoAudioPreprocessing import remove_noise, output_silence_timestamps, cut_video_and_audio_based_on_silence
+from moviepy.editor import AudioFileClip
 
 def preprocess_video_audio(input_filename, input_path,
                             output_videoprocessed_path, output_silencets_path,
@@ -45,13 +47,28 @@ def main():
     output_cut_path = '/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/output_cut'
     temp_audio_path = '/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/temp'
 
-    Parallel(n_jobs=-1)(delayed(preprocess_video_audio)(input_filename, input_path,
-                                    output_videoprocessed_path, output_silencets_path,
-                                    output_cut_path, temp_audio_path,
-                                    video_filetype = 'mp4', audio_filetype = 'wav',
-                                    threshold = -60, duration = 1) for input_filename in os.listdir(input_path)
-                                    if input_filename.endswith('.mp4'))
+    video_filetype = 'mp4'
+    audio_filetype = 'wav'
 
+    for input_filename in os.listdir(input_path):
+        input_filename_noft = input_filename.split('.')[0]
+        try:
+            preprocess_video_audio(input_filename, input_path,
+                                                output_videoprocessed_path, output_silencets_path,
+                                                output_cut_path, temp_audio_path,
+                                                video_filetype = 'mp4', audio_filetype = 'wav',
+                                                threshold = -60, duration = 1)
+        except:
+            # corrupted file or built-in moviepy bug: copy original files directly
+            input_file = "{}/{}.{}".format(input_path, input_filename_noft, video_filetype)
+            output_audio_file = "{}/audio/{}.{}".format(output_cut_path, input_filename_noft, audio_filetype)
+            output_video_file = "{}/video/{}.{}".format(output_cut_path, input_filename_noft, video_filetype)
+            audio = AudioFileClip(input_file)
+            # If the file not corrupted, output audio file
+            audio.write_audiofile(output_audio_file)
+            # If the file not corrupted, copy video file
+            print('file not corrupted')
+            shutil.copyfile(input_file, output_video_file)
 
 if __name__ == '__main__':
     main()
