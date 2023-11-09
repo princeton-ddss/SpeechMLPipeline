@@ -1,4 +1,4 @@
-from LLaMA_HuggingFace import run_LLaMA_from_huggingface
+from LLaMA_HuggingFace_MAC import run_LLaMA_from_huggingface
 
 
 
