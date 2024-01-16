@@ -4,20 +4,21 @@ from Whisper import whisper_transcription
 
 def main():
     # Sound File Input Path
-    # soundfile_input_path = '/Users/jf3375/Desktop/DDSS/Projects/NJFS/audio_speech/data/njfs/output_cut/audio'
-    soundfile_input_path = '/drives/Njfs-Audio/output/preprocess_data/output_cut/1007/audio'
+    soundfile_input_path = '/scratch/gpfs/jf3375/modern_family/audio'
+    # soundfile_input_path = '/Users/jf3375/Desktop/modern_family/video/cut'
 
     # Model path
-    # model_path = '/Users/jf3375/PycharmProjects/TestMLEnvironment/models/Whisper/large-v2.pt'
-    model_path = '/drives/Njfs-Audio/models/Whisper/large-v2.pt'
+    model_path = '/scratch/gpfs/jf3375/models/Whisper/large-v2.pt'
+    # model_path = '/Users/jf3375/Dropbox (Princeton)/models/Whisper/large-v2.pt'
 
     # Output path
-    output_path = '/drives/Njfs-Audio/output/whisper_result'
+    output_path = '/scratch/gpfs/jf3375/modern_family/output/Whisper'
+    # output_path = '/Users/jf3375/Desktop/modern_family/output/Whisper'
 
     os.chdir(soundfile_input_path)
 
     for input_filename in os.listdir(soundfile_input_path):
-        if input_filename.endswith('.wav'):
+        if input_filename.endswith('.wav') or input_filename.endswith('.WAV'):
             whisper_transcription(input_filename, model_path, output_path)
 
 

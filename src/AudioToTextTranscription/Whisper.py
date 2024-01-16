@@ -31,6 +31,9 @@ def whisper_transcription(soundfile_input_path, model_path, output_path):
     transcribe_df['file_name'] = soundfile_name
     transcribe_df['speaker'] = ''
 
+    # Remove leading and trailing whitespaces from whisper outputs
+    transcribe_df['text'] = transcribe_df['text'].apply(lambda x: x.strip())
+
     transcribe_df.to_csv(os.path.join(output_path, '{}.csv'.format(soundfile_name)), index=False)
     return transcribe_df
 
