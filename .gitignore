@@ -1,5 +1,4 @@
 # Local Folders git ignore
-/models/
 /output/
 /data/
 
@@ -161,3 +160,6 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 /data/
+
+# Others
+.DS_Store
