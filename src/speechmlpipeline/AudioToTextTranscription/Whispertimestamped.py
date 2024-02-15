@@ -7,21 +7,36 @@ Functions to Apply Whisper with Improved TimeStamped Accuracy for Audio-Text Tra
 import os
 import whisper_timestamped as whisper
 import pandas as pd
+import torch
+from typing import Union
 
-def whisper_transcription(soundfile_input_path, model_path, output_path):
-    if '/' in soundfile_input_path:
-        soundfile_name = soundfile_input_path.split("/")[-1].split(".")[0]
-    else:
-        soundfile_name = soundfile_input_path.split(".")[0]
+def whisper_transcription(audio_file_input_path, audio_file_input_name, whisper_model_path, whisper_output_path,
+                          device: Union[str, torch.device]=None,
+                          only_run_in_english = True):
+    audio_file_input_name_noftype = audio_file_input_name.split('.')[0]
 
+    if not device:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    audio = whisper.load_audio(soundfile_input_path)
-    whisper_model = whisper.load_model(model_path) # Could not use predownloaded Whisper model for accurate timestamp
+    audio = whisper.load_audio(os.path.join(audio_file_input_path, audio_file_input_name))
+    whisper_model = whisper.load_model(whisper_model_path, device=device) # Could not use predownloaded Whisper model for accurate timestamp
 
+    # detect the spoken language
+    mel = whisper.log_mel_spectrogram(whisper.pad_or_trim(audio)).to(device)
+    _, probs = whisper_model.detect_language(mel)
+    detected_language = max(probs, key=probs.get)
+
+    if detected_language != 'en' and only_run_in_english:
+        print('Langauge is not English. No further processing. Return Dataframe with only Detected Language as Output')
+        transcribe_df = pd.DataFrame()
+        transcribe_df['language'] = [detected_language]
+        transcribe_df.to_csv(os.path.join(whisper_output_path, '{}.csv'.format(audio_file_input_name_noftype)),
+                             index=False)
+        return
     # Translate text into Whisper
     result = whisper.transcribe(whisper_model, audio, beam_size=5, best_of=5,
                                 temperature=(0.0, 0.2, 0.4, 0.6, 0.8, 1.0),
-                                vad = 'auditok')
+                                vad = 'auditok', language= detected_language)
     segment_len = len(result['segments'])
     transcribe_df = pd.DataFrame()
     start_list = []
@@ -49,14 +64,14 @@ def whisper_transcription(soundfile_input_path, model_path, output_path):
     text_list.append(prev_text)
 
     transcribe_df['start'], transcribe_df['end'], transcribe_df['text'] = start_list, end_list, text_list
-    transcribe_df['file_name'] = soundfile_name
+    transcribe_df['file_name'] = audio_file_input_name_noftype
     transcribe_df['speaker'] = ''
-
     # Remove leading and trailing whitespaces from whisper outputs
     transcribe_df['text'] = transcribe_df['text'].apply(lambda x: x.strip())
     # Create unique id of whisper segment for later merge
     transcribe_df['segmentid'] = list(range(transcribe_df.shape[0]))
+    transcribe_df['language'] = detected_language
 
-    transcribe_df.to_csv(os.path.join(output_path, '{}.csv'.format(soundfile_name)), index=False)
+    transcribe_df.to_csv(os.path.join(whisper_output_path, '{}.csv'.format(audio_file_input_name_noftype)), index=False)
     return transcribe_df
 
