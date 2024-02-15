@@ -4,14 +4,13 @@ import pandas as pd
 import os
 import torch
 
-from huggingface_offline.LLaMA_HuggingFace_Offline import get_full_prompt, setup_LLaMA_model_tokenizer
-from huggingface_offline.Download_Llama_Model import download_llama_model
+from .huggingface_offline.LLaMA_HuggingFace_Offline import get_full_prompt, setup_LLaMA_model_tokenizer
 
-from prompts.prompt1 import systemprompt, main_question_bgn, examples
-from prompts.prompt1_template import get_main_question
+from .prompts.prompt1 import systemprompt, main_question_bgn, examples
+from .prompts.prompt1_template import get_main_question
 
-def run_llama_diarization(whisper_output_path, input_filename, diarization_llama_output_path,
-                          llama_model_local_dir, llama_model_size='7b', device_map ='auto', torch_dtype = torch.float16, get_full_prompt=get_full_prompt,
+def llama2_speakerchangedetection(whisper_df,
+                          llama_model_path, llama_model_size='7b', device_map ='auto', torch_dtype = torch.float16, get_full_prompt=get_full_prompt,
                            systemprompt=systemprompt, main_question_bgn=main_question_bgn, examples=examples, get_main_question=get_main_question):
 
     # set llama_model_folder_name based on llama_model_size
@@ -19,16 +18,16 @@ def run_llama_diarization(whisper_output_path, input_filename, diarization_llama
 
     # Check if llama_model_size_local_folder exists
     # If the folder does not exist, download the model from HF
-    if not os.path.exists(os.path.join(llama_model_local_dir, 'models--meta-llama--Llama-2-{}-chat-hf'.format(llama_model_size))):
-        download_llama_model(llama_model_local_dir, 'meta-llama/Llama-2-{}-chat-hf'.format(llama_model_size))
+    if not os.path.exists(os.path.join(llama_model_path, 'models--meta-llama--Llama-2-{}-chat-hf'.format(llama_model_size))):
+        raise Exception('Llama model is not downloaded locally. Please download model from HF manually by following readme of repo')
 
-    # Impute Llama folder snapshot id based on llama_model_local_dir and folder name
+    # Impute Llama folder snapshot id based on llama_model_path and folder name
     # The local model folder should be like this: /Users/jf3375/Dropbox (Princeton)/models/llama/models--meta-llama--Llama-2-7b-chat-hf/snapshots/c1b0db933684edbfe29a06fa47eb19cc48025e93
-    snapshot_id = [i for i in os.listdir(os.path.join(llama_model_local_dir, llama_model_size_local_folder_name)) if not i.startswith('.')][0]
+    snapshot_id = [i for i in os.listdir(os.path.join(llama_model_path, llama_model_size_local_folder_name)) if not i.startswith('.')][0]
     llama_model_size_local_folder = os.path.join(llama_model_size_local_folder_name, snapshot_id)
 
     # Load Llama model
-    tokenizer, pipeline = setup_LLaMA_model_tokenizer(llama_model_local_dir, llama_model_size_local_folder, device_map, torch_dtype)
+    tokenizer, pipeline = setup_LLaMA_model_tokenizer(llama_model_path, llama_model_size_local_folder, device_map, torch_dtype)
 
     # Set parameters of the model to get deterministic response
     # The input includes the question itself; Need to set up max_length long enough so all the answers would return
@@ -36,9 +35,6 @@ def run_llama_diarization(whisper_output_path, input_filename, diarization_llama
     top_p = 0
     top_k = 1
     max_length = 4086  # The maximum number of tokens; Issues would occur if it increases
-
-    # Read Whisper Inputs
-    whisper_df = pd.read_csv(os.path.join(whisper_output_path, input_filename))
 
     # Need to cut dataframe to ensure that the input text length does not exceed maximum tokens
     # Since token is not equal to the number of words, would divide max_length by 2 to ensure the buffer
@@ -73,7 +69,7 @@ def run_llama_diarization(whisper_output_path, input_filename, diarization_llama
             torch.cuda.empty_cache()
             gc.collect()
 
-            # Apply Llama to get diarization results
+            # Apply Llama to get detection results
             sequences = pipeline(
                 full_prompt,
                 return_full_text=False,  # Not repeat the question
@@ -114,6 +110,6 @@ def run_llama_diarization(whisper_output_path, input_filename, diarization_llama
                     results_segment_df['speaker_change_llama2'] = [''] * whisper_df_cut.shape[0]
 
             results_all_df = pd.concat([results_all_df, results_segment_df])
-    results_all_df.to_csv(os.path.join(diarization_llama_output_path, input_filename), index=False)
+            # Convert Empty String to NotSure to Clearly Indicate Llama2 does not identify speaker changes of those segments
+            results_all_df['speaker_change_llama2'] =  results_all_df['speaker_change_llama2'].apply(lambda x: 'NotSure' if x == '' else x)
     return results_all_df
-

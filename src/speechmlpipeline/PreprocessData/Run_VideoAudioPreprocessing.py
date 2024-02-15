@@ -9,7 +9,7 @@ import os
 import shutil
 from joblib import Parallel, delayed
 from VideoAudioPreprocessing import remove_noise, output_silence_timestamps, cut_video_and_audio_based_on_silence
-from moviepy.editor import AudioFileClip
+from moviepy.editor import audio_fileClip
 
 def preprocess_video_audio(input_filename, input_path,
                             output_videoprocessed_path, output_silencets_path,
@@ -63,9 +63,9 @@ def main():
             input_file = "{}/{}.{}".format(input_path, input_filename_noft, video_filetype)
             output_audio_file = "{}/audio/{}.{}".format(output_cut_path, input_filename_noft, audio_filetype)
             output_video_file = "{}/video/{}.{}".format(output_cut_path, input_filename_noft, video_filetype)
-            audio = AudioFileClip(input_file)
+            audio = audio_fileClip(input_file)
             # If the file not corrupted, output audio file
-            audio.write_audiofile(output_audio_file)
+            audio.write_audio_file(output_audio_file)
             # If the file not corrupted, copy video file
             print('file not corrupted')
             shutil.copyfile(input_file, output_video_file)

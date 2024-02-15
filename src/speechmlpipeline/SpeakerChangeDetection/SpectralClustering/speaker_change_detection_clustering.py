@@ -1,3 +1,5 @@
+from typing import Union
+import torch
 import os
 from resemblyzer import preprocess_wav, VoiceEncoder, sampling_rate
 from spectralcluster import SpectralClusterer
@@ -17,9 +19,9 @@ def create_labelling(labels, wav_splits):
             timestamp_speaker[start_time] = 'speaker' + str(labels[i])
     return timestamp_speaker
 
-def spectralclustering_speakerdiarization(soundfile_input_path, input_filename, device,
-                                           min_speakers, max_speakers):
-    wav = preprocess_wav(os.path.join(soundfile_input_path, input_filename))
+def spectralclustering_speakerchangedetection(audio_file_input_path, audio_file_input_name,
+                                           min_speakers, max_speakers, device: Union[str, torch.device]=None):
+    wav = preprocess_wav(os.path.join(audio_file_input_path, audio_file_input_name))
 
     encoder = VoiceEncoder(device)
     _, cont_embeds, wav_splits = encoder.embed_utterance(wav, return_partials=True, rate=16)

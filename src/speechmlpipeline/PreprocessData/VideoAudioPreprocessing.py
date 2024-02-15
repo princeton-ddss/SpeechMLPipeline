@@ -7,7 +7,7 @@ Functions to Preprocess Video/Audio for ML Models Inputs
 import os
 import shutil
 import subprocess
-from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips, concatenate_audioclips
+from moviepy.editor import VideoFileClip, audio_fileClip, concatenate_videoclips, concatenate_audioclips
 
 # Create the error class of not equal length of video and its related audio
 class VideoAudioLengthNotEqual(Exception):
@@ -59,9 +59,9 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
     if os.path.getsize(silence_file) == 0:
         print("No Silence TimeStamp; The processed file may be corrupted")
         # See if the file is corrupted
-        audio = AudioFileClip(input_file)
+        audio = audio_fileClip(input_file)
         # If the file not corrupted, output audio file
-        audio.write_audiofile(output_audio_file)
+        audio.write_audio_file(output_audio_file)
         # If the file not corrupted, copy video file
         print('file not corrupted')
         shutil.copyfile(input_file, output_video_file)
@@ -72,7 +72,7 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
 
     # Set buffersize higher above 400,000 to avoid index error during output
     video = VideoFileClip(input_file, audio_buffersize=400000)
-    audio = AudioFileClip(input_file, buffersize=400000)
+    audio = audio_fileClip(input_file, buffersize=400000)
     if video.duration != audio.duration:
         raise VideoAudioLengthNotEqual
     full_duration = video.duration
@@ -128,14 +128,14 @@ def cut_video_and_audio_based_on_silence(input_filename_noft, video_filetype, au
         output_video_file,
         codec='libx264',
         audio_codec='aac',
-        temp_audiofile='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
+        temp_audio_file='{}/{}.{}'.format(temp_audio_path,input_filename_noft, 'm4a'),
         remove_temp=True
     )
 
     # Get the new audio after the cutting to solve floating issue
     processed_audio = processed_video.audio
 
-    processed_audio.write_audiofile(
+    processed_audio.write_audio_file(
         output_audio_file
     )
 

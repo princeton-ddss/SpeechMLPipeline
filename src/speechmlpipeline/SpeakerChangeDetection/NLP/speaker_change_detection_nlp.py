@@ -2,14 +2,14 @@ import spacy
 # nlp = spacy.load(...) would lead to exit code 138 (segmentation fault), but the codes would still finish successfully
 # To solve this, Need to install spacy by: sudo python3 -m spacy download en_core_web_lg
 
-def nlp_speakerdiarization(whisper_df, nlp):
+def nlp_speakerchangedetection(whisper_df, nlp_model):
     speaker_changes_list = ['NotSure'] * whisper_df.shape[0]
     texts_list = list(whisper_df['text'])
 
     prev_end_token = None
 
     for idx, text in enumerate(texts_list):
-        text_tokens = nlp(text)
+        text_tokens = nlp_model(text)
 
         # If this segment ends with ., and its previous segment ends with ?: speaker changes in this segment
         if idx != 0:

@@ -3,7 +3,7 @@ import pandas as pd
 # Five typical examples are enough for few shot learning
 # ~ 4000 examples are needed for the fine-tuning
 
-systemprompt = """You are the expert of speaker diarization. 
+systemprompt = """You are the expert of speaker detection. 
 You are very knowledgable with how people talk to each other.
 You are very proficient in identifying the conversation flow to determine if the speaker changes from the previous segment to next segment.
 """
