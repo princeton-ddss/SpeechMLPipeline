@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/736356201.svg)](https://zenodo.org/doi/10.5281/zenodo.10436874)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10712895.svg)](https://doi.org/10.5281/zenodo.10712895)
 
 ## SpeechMLPipeline #
 [**SpeechMLPipeline**](https://github.com/princeton-ddss/SpeechMLPipeline) is a Python package for users to run the complete speech machine learning pipeline via one simple function
