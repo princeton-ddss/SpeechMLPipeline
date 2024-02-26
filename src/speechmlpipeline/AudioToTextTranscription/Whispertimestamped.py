@@ -13,6 +13,24 @@ from typing import Union
 def whisper_transcription(audio_file_input_path, audio_file_input_name, whisper_model_path, whisper_output_path,
                           device: Union[str, torch.device]=None,
                           only_run_in_english = True):
+    '''
+    The main function to run OpenAI Whisper to get transcription texts with timestamp adjustments
+    :param audio_file_input_path: A path which contains an input audio file
+    :type audio_file_input_path: str
+    :param audio_file_input_name: A audio file name containing the file type
+    :type audio_file_input_name: str
+    :param whisper_model_path: A path where the Whisper model files are saved
+    :type whisper_model_path: str
+    :param whisper_output_path: A path to save the transcription output in csv file
+    :type whisper_output_path: str
+    :param device: Device type to run the model, defaults to None so GPU would be automatically used if it is available
+    :type: str or torch.device, optional
+    :param only_run_in_english: True or False to Indicate if Whisper would only be run when
+    the identified langauge in the audio file is English, defaults to True
+    :type: bool, optional
+    :return: None
+    :rtype: None
+    '''
     audio_file_input_name_noftype = audio_file_input_name.split('.')[0]
 
     if not device:
