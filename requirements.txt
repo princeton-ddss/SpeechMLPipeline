@@ -1,0 +1,21 @@
+accelerate
+audiotextspeakerchangedetect
+auditok
+en-core-web-lg @ https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl
+huggingface-hub
+openai-whisper @ git+https://github.com/openai/whisper.git@8bc8860694949db53c42ba47ddc23786c2e02a8b
+pyannote.audio==3.1.1
+pyannote.core==5.0.0
+pyannote.database==5.0.1
+pyannote.metrics==3.2.1
+pyannote.pipeline==3.0.1
+pydub
+resemblyzer
+spacy
+spectralcluster
+speechbrain==0.5.16
+torch
+torchaudio
+torchvision
+transformers
+whisper-timestamped==1.14.1
