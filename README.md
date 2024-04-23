@@ -77,11 +77,16 @@ download_models_main_function(<download_model_path>, <models_list>, <hf_access_t
 
 
 ## Usage
-The complete pipeline could be ran by using **run_speech_ml_pipeline** function.
+The complete pipeline could be run by using **run_speech_ml_pipeline** function.
 
-Please view the function and its inputs description inside the Python file **src/speechmlpipeline/main_pipeline_local_function.py**.
+Please view the sample codes to run the function in **sample_run.py** and **sample_run_existingllama2output.py** in the src/speechmlpipeline. 
 
-Please view the sample codes to run the function in **sample_run.py** and **sample_run_existingllama2output.py** in the src/speechmlpipeline.
+Specifically, detection_models in speakerchangedetection input could be set as a list or sublist of 
+['pyannote', 'clustering', 'nlp', 'llama2-70b']. Device in any inputs could be set as None or 'gpu' or 'cpu'. 
+If device is set as None, gpu would be used if it is available. Running llama2-70b requires at least 2 gpus and 250GB memory. 
+If the computing resources is not available for running llama2-70b, please exclude llama2-70b from detection_models input.
+
+Please view the detailed function description and its inputs description inside the Python file **src/speechmlpipeline/main_pipeline_local_function.py**.
 ```python
 from main_pipeline_local_function import TranscriptionInputs, SpeakerChangeDetectionInputs, 
     EnsembleDetectionInputs, SpeakerIdentificationInputs, run_speech_ml_pipeline
