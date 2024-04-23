@@ -3,6 +3,18 @@ from .Download_Llama_Model import download_llama_model
 from .Download_Speechbrain_Model import download_speechbrain_model
 
 def download_models_main_function(download_model_path, models_list, hf_access_token):
+    '''
+    The main function to download models and save them on the local path
+
+    :param download_model_path: A path to save all the downloaded models files
+    :type download_model_path: str
+    :param models_list: A list of the names of the models to be downloaded
+    :type models_list: str
+    :param hf_access_token: Access token to HuggingFace
+    :type hf_access_token: str
+    :return: None
+    :rtype: None
+    '''
     if 'whisper' in models_list:
         download_whisper_model(download_model_path, model_folder='whisper')
     if 'speechbrain' in models_list:
