@@ -21,8 +21,9 @@ misalignment between the timestamps and the transcription texts by identifying t
 
 * The [Rule-based NLP Speaker Change Detection Model](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection) is applied to detect speaker change by analyzing text using well-defined rules developed by human comprehension. 
 
-* The [Ensemble Audio-and-text-based Speaker Change Detection Model](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection) is built by ensembling audio-based or text-based speaker change detection models. The voting methods are used to aggregate the predictions of the speaker change detection models above except for Rule-based NLP model.
-The aggregated predictions are then corrected by Rule-based NLP model.
+* The [Ensemble Audio-and-text-based Speaker Change Detection Models](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection) is built by ensembling audio-based or text-based speaker change detection models. The voting methods are used to aggregate the predictions of the speaker change detection models above except for Rule-based NLP model.
+The aggregated predictions are then corrected by Rule-based NLP model. It has two models, the Majority Model based on the majority voting and the Unanimity Model based on the unanimity voting.
+
 
 **Speaker Identification**
 * The [Speechbrain models](https://github.com/speechbrain/speechbrain) are used to perform the speaker identification by comparing the similarities between the vector embeddings of each input audio segment and labelled speakers audio segments.
@@ -33,17 +34,25 @@ python -m venv <envname>
 source <envname>/bin/activate
 ```
 
-## Install **speechmlpipeline** and its dependencies via Github
+## Dependencies Installation
+Please download **requirements.txt** from the main repo folder to install the package dependencies.
+```
+pip install -r <.../requirements.txt>
+```
+
+## Package Installation
+The **speechmlpipeline** package could be installed either via Pypi or Github.
+### Install **speechmlpipeline** via Pypi
+```
+pip install speechmlpipeline
+```
+
+### Install **speechmlpipeline** via Github
 ```
 git lfs install
 git clone https://github.com/princeton-ddss/SpeechMLPipeline
 cd <.../SpeechMLPipeline>
-pip install -r requirements.txt
 pip install .
-```
-## Install **speechmlpipeline** via Pypi
-```
-pip install speechmlpipeline
 ```
 
 ## Download Models Offline to Run Them without Internet Connection
@@ -52,7 +61,7 @@ pip install speechmlpipeline
 python -m spacy download en_core_web_lg
 ```
 
-### Download Whisper, Llama2, and Speechbrain Models by using the Download Module in the Repo
+### Download Whisper, Llama2, and Speechbrain Models by using the Download Module from the Package
 <hf_access_token> is the access token to Hugging Face.
 Please create a [Hugging Face account](https://huggingface.co/) if it does not exist. The new access token could be created by following the [instructions](https://huggingface.co/docs/hub/en/security-tokens).
 
@@ -67,7 +76,7 @@ from speechmlpipeline.DownloadModels.download_models_main_function import downlo
 download_models_main_function(<download_model_path>, <models_list>, <hf_access_token>)
 ```
 
-### Download PyAnnotate Models using Dropbox Link
+### Download PyAnnote Models using Dropbox Link
 
 To download PyAnnotate models, please download pyannote3.1 folder in this [Dropbox Link](https://www.dropbox.com/scl/fo/tp2uryaq81sze2l0yuxb9/ACgXWOr7Be1ZZovz7xNSuTs?rlkey=9c2z50pjbjhoo3vz4dbxlmlcf&st=fukejg4l&dl=0).
 
@@ -100,6 +109,7 @@ run_speech_ml_pipeline(transcription = TranscriptionInputs(...),
 ```
 
 To run any particular steps, please simply just use the inputs corresponding to the particular steps.
+
 For instance, to run all steps of the pipeline with the existing transcriptions:
 ```Python
 run_speech_ml_pipeline(speakerchangedetection=SpeakerChangeDetectionInputs(...), ensembledetection=EnsembleDetectionInputs(...),
@@ -161,6 +171,44 @@ Please view the descriptions below to specify the attributes of the class instan
 
 Please view the sample codes to run the function in **sample_run.py** and **sample_run_existingllama2output.py** in the **src/speechmlpipeline** folder. 
 For detailed functions and class decriptions, please refer to **src/speechmlpipeline/main_pipeline_local_function.py**
+
+## Evaluation
+Please view the summary of the prediction performance of speaker change detection models: 
+* Audio-based Model: PyAnnote
+* Text-based Model: The Llama2 Model
+* Audio-and-Text based Models: The Unanimity Model and the Majority Model
+
+[VoxConverse Dataset v0.3](https://github.com/joonson/voxconverse?tab=readme-ov-file)
+
+VoxConverse is an only audio-visual diarization dataset consisting of over 50 hours of multispeaker clips of human speech, extracted from YouTube videos, usually in a political debate or news segment context to ensure multi-speaker dialogue.
+The audio files in the dataset have lots of variations of the proportion of speaker changes, which indicates the effectiveness of the dataset as the evaluation dataset to evaluate the models robustness.
+
+Average Coverage, Purity, Precision, and Recall
+
+|           | PyAnnote | Llama2 | Unanimity | Majority | 
+|-----------|----------|--------|-----------|----------|
+| Coverage  | 86%      | 45%    | 59%       | 84%      | 
+| Purity    | 83%      | 89%    | 87%       | 70%      | 
+| Precision | 23%      | 14%    | 24%       | 32%      | 
+| Recall    | 19%      | 32%    | 41%       | 19%      | 
+
+
+[AMI Headset Mix](https://groups.inf.ed.ac.uk/ami/corpus/overview.shtml)
+
+The AMI Meeting Corpus is a multi-modal data set consisting of 100 hours of meeting recordings. Around two-thirds of the data has been elicited using a scenario in which the participants play different roles in a design team, taking a design project from kick-off to completion over the course of a day. The rest consists of naturally occurring meetings in a range of domains.
+Different from VoxConverse Dataset, AMI dataset is not that diverse as it only consists of meeting recordings. The median and average proportion of speaker change is both around 78%, and the minimal proportion is above 59%. Thus, the evaluation analysis based on AMI is more applicable to measure the models performance under regular conversational setting.
+
+Average Coverage, Purity, Precision, and Recall
+
+|           | PyAnnote | Llama2 | Unanimity | Majority | 
+|-----------|----------|--------|-----------|----------|
+| Coverage  | 89%      | 75%    | 80%       | 92%      | 
+| Purity    | 60%      | 65%    | 64%       | 46%      | 
+| Precision | 44%      | 32%    | 40%       | 46%      | 
+| Recall    | 18%      | 18%    | 25%       | 11%      |
+
+For the detailed descriptions of the models, metrics, and analysis, please download the [evaluation_analysis pdf file](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection/blob/main/Evaluation_Analysis.pdf)
+from the [AudioAndTextBasedSpeakerChangeDetection](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection/tree/main) repo.
 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
