@@ -2,11 +2,11 @@
 Sample File to Run the Whole SpeechMLPipeline Without Existing Llama2 output
 '''
 
-from main_pipeline_local_function import TranscriptionInputs, SpeakerChangeDetectionInputs, \
+from speechmlpipeline.main_pipeline_local_function import TranscriptionInputs, SpeakerChangeDetectionInputs, \
     EnsembleDetectionInputs, SpeakerIdentificationInputs, run_speech_ml_pipeline
 
 # Shared Inputs
-hf_access_token = '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'
+hf_access_token = '<hf_access_token>'
 device = None  # if set device = None, by default would use gpu if cuda is available, otherwise use gpu
 audio_file_input_path =  '/scratch/gpfs/jf3375/modern_family/audio/sample_data'
 audio_file_input_name =  'sample_data.WAV'

@@ -35,7 +35,7 @@ class TranscriptionInputs(TypedDict):
     :type whisper_model_path: str
     :param whisper_output_path: A path to save the csv file of transcription outputs
     :type whisper_output_path: str
-    :param device: Device type to run the model; If the type is None, GPU would be automatically used if it is available
+    :param device: Torch device type to run the model; If device is set as None, GPU would be automatically used if it is available.
     :type: str or torch.device or None
     :param only_run_in_english: True or False to Indicate if Whisper would only be run when
     the identified langauge in the audio file is English
@@ -74,8 +74,7 @@ class SpeakerChangeDetectionInputs(TypedDict):
     :type llama2_model_path: str
     :param pyannote_model_path: A path where the Pyannote model files are saved
     :type pyannote_model_path: str or None
-    :param device: Device type to run the model
-    used if it is available
+    :param device: Torch device type to run the model; If device is set as None, GPU would be automatically used if it is available.
     :type: str or torch.device or None
     :param detection_llama2_output_path: A path where the pre-run Llama2 speaker change detection output in csv file
     is saved if exists
