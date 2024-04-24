@@ -125,7 +125,6 @@ Please view the descriptions below to specify the attributes of the class instan
     * device: Torch device type to run the model; If device is set as None, GPU would be automatically used if it is available. 
     * only_run_in_english: True or False to Indicate if Whisper would only be run when
     the identified langauge in the audio file is English
-    <p> <br> </p>
 * **SpeakerChangeDetectionInputs**
     * audio_file_input_path: A path which contains an input audio file
     * audio_file_input_name: A audio file name containing the file type
@@ -142,13 +141,11 @@ Please view the descriptions below to specify the attributes of the class instan
     * detection_llama2_output_path: A path where the pre-run Llama2 speaker change detection output in csv file
     * temp_output_path: A path to save the current run of Llama2 speaker change detection output
     to avoid future rerunning
-    <p> <br> </p>
 * **EnsembleDetectionInputs**
     * detection_file_input_path: A path where the speaker change detection output in csv file is saved
     * detection_file_input_name: A speaker change detection output csv file name ending with .csv
     * ensemble_output_path: A path to save the ensemble detection output in csv file
     * ensemble_voting: A list of voting methods to be used to build the final ensemble model
-    <p> <br> </p>
 * **SpeakerIdentificationInputs**
     * detection_file_input_path: A path where the speaker change detection output in csv file is saved
     * detection_file_input_name: A speaker change detection output csv file name ending with .csv
