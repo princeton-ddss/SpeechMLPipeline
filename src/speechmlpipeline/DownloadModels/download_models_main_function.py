@@ -2,7 +2,7 @@ from .Download_Whisper_Model import download_whisper_model
 from .Download_Llama_Model import download_llama_model
 from .Download_Speechbrain_Model import download_speechbrain_model
 
-def download_models_main_function(download_model_path, models_list, hf_access_token):
+def download_models_main_function(download_model_path, models_list, hf_access_token=None):
     '''
     The main function to download models and save them on the local path
 
@@ -20,8 +20,12 @@ def download_models_main_function(download_model_path, models_list, hf_access_to
     if 'speechbrain' in models_list:
         download_speechbrain_model(download_model_path, model_folder = 'speechbrain')
     if 'llama2-13b' in models_list:
+        if not hf_access_token:
+            raise Exception('HuggingFace Access Token is needed for download Llama2 models')
         download_llama_model(download_model_path, hf_access_token, model_folder = 'llama',
                          llama_model_repo_id='meta-llama/Llama-2-13b-chat-hf')
     if 'llama2-70b' in models_list:
+        if not hf_access_token:
+            raise Exception('HuggingFace Access Token is needed for download Llama2 models')
         download_llama_model(download_model_path, hf_access_token, model_folder = 'llama',
                          llama_model_repo_id='meta-llama/Llama-2-70b-chat-hf')
