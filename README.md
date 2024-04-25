@@ -42,12 +42,12 @@ pip install -r <.../requirements.txt>
 
 ## Package Installation
 The **speechmlpipeline** package could be installed either via Pypi or Github.
-### Install **speechmlpipeline** via Pypi
+### Install **speechmlpipeline** via Pypi for the stable version of the package
 ```
 pip install speechmlpipeline
 ```
 
-### Install **speechmlpipeline** via Github
+### Install **speechmlpipeline** via Github for the latest version of the package
 ```
 git lfs install
 git clone https://github.com/princeton-ddss/SpeechMLPipeline
@@ -127,9 +127,10 @@ run_speech_ml_pipeline(speakeridentification=SpeakerIdentificationInputs(...))
 ```
 
 Please view the descriptions below to specify the attributes of the class instance corresponding to each step of the pipeline.
+Please convert the audio files type to wav to run the whole pipeline or speaker identification.
 * **TranscriptionInputs** 
     * audio_file_input_path: A path which contains the audio file
-    * audio_file_input_name: A audio file name containing the file type
+    * audio_file_input_name: A audio file name ending with .wav
     * whisper_model_path: A path where the Whisper model files are saved
     * whisper_output_path: A path to save the csv file of transcription outputs
     * device: Torch device type to run the model; If device is set as None, GPU would be automatically used if it is available. 

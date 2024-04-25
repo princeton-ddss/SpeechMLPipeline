@@ -56,7 +56,7 @@ def run_speaker_identification_model_function(detection_file_input_path, detecti
         raise Exception('Please download the model first by following readme')
 
     # Import full_audio
-    full_audio = AudioSegment.from_wav(os.path.join(audio_file_input_path, '{}.WAV'.format(filename_noftype)))
+    full_audio = AudioSegment.from_wav(os.path.join(audio_file_input_path, '{}.wav'.format(filename_noftype)))
 
     # Speaker Identification for each audio segment
     speaker_identify_allsegments = []
