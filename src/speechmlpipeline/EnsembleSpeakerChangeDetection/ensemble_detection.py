@@ -4,7 +4,7 @@ import pandas as pd
 from audiotextspeakerchangedetect.EnsembleSpeakerChangeDetection.ensemble_detection import ensemble_detection
 
 def ensemble_detection_function(detection_file_input_path, detection_file_input_name, ensemble_output_path,
-                       ensemble_voting = ['majority', 'unanimity']):
+                       ensemble_voting = ['majority', 'single']):
     '''
     The main function to build an ensemble model of speaker change detection by using both audio and textual features.
     Specifically, the ensemble model is built by aggregating predictions from various detection models
