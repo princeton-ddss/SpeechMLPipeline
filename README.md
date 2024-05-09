@@ -22,7 +22,7 @@ misalignment between the timestamps and the transcription texts by identifying t
 * The [Rule-based NLP Speaker Change Detection Model](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection) is applied to detect speaker change by analyzing text using well-defined rules developed by human comprehension. 
 
 * The [Ensemble Audio-and-text-based Speaker Change Detection Models](https://github.com/princeton-ddss/AudioAndTextBasedSpeakerChangeDetection) is built by ensembling audio-based or text-based speaker change detection models. The voting methods are used to aggregate the predictions of the speaker change detection models above except for Rule-based NLP model.
-The aggregated predictions are then corrected by Rule-based NLP model. It has two models, the Majority Model based on the majority voting and the Unanimity Model based on the unanimity voting.
+The aggregated predictions are then corrected by Rule-based NLP model. It has two models, the Majority Model based on the majority voting and the Singularity Model based on the singularity voting.
 
 
 **Speaker Identification**
@@ -177,7 +177,7 @@ For detailed functions and class decriptions, please refer to **src/speechmlpipe
 Please view the summary of the prediction performance of speaker change detection models: 
 * Audio-based Model: PyAnnote
 * Text-based Model: The Llama2 Model
-* Audio-and-Text based Models: The Unanimity Model and the Majority Model
+* Audio-and-Text based Models: The Singularity Model and the Majority Model
 
 [VoxConverse Dataset v0.3](https://github.com/joonson/voxconverse?tab=readme-ov-file)
 
@@ -186,7 +186,7 @@ The audio files in the dataset have lots of variations of the proportion of spea
 
 Average Coverage, Purity, Precision, and Recall
 
-|           | PyAnnote | Llama2 | Unanimity | Majority | 
+|           | PyAnnote | Llama2 | Singularity | Majority | 
 |-----------|----------|--------|-----------|----------|
 | Coverage  | 86%      | 45%    | 59%       | 84%      | 
 | Purity    | 83%      | 89%    | 87%       | 70%      | 
@@ -201,7 +201,7 @@ Different from VoxConverse Dataset, AMI dataset is not that diverse as it only c
 
 Average Coverage, Purity, Precision, and Recall
 
-|           | PyAnnote | Llama2 | Unanimity | Majority | 
+|           | PyAnnote | Llama2 | Singularity | Majority | 
 |-----------|----------|--------|-----------|----------|
 | Coverage  | 89%      | 75%    | 80%       | 92%      | 
 | Purity    | 60%      | 65%    | 64%       | 46%      | 

@@ -27,13 +27,13 @@ detection_llama2_output_path = '/scratch/gpfs/jf3375/modern_family/output/detect
 temp_output_path = '/scratch/gpfs/jf3375/test/temp'
 
 # Ensemble Specific Inputs
-ensemble_voting = ['majority', 'single']
+ensemble_voting = ['majority', 'singularity']
 ensemble_output_path = '/scratch/gpfs/jf3375/test/output'
 
 # Identification Specific Inputs
 audio_speaker_file_input_path = '/scratch/gpfs/jf3375/modern_family/characters_sounds'
 verification_model_path = '/scratch/gpfs/jf3375/models/speechbrain'
-speaker_change_col = 'speaker_change_ensemble_single'
+speaker_change_col = 'speaker_change_ensemble_singularity'
 verification_score_threshold = 0
 identification_output_path =  '/scratch/gpfs/jf3375/test/output'
 
